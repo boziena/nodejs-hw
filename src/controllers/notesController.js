@@ -1,18 +1,35 @@
 import { Note } from '../models/note.js';
 import createError from 'http-errors';
 
-export const getAllNotes = async (req, res, next) => {
-  const result = await Note.find();
-  res.status(200).json({ status: 200, message: 'Success', data: result });
+export const getAllNotes = async (req, res) => {
+  const notes = await Note.find();
+  res.status(200).json(notes);
+};
+
+export const getNoteById = async (req, res, next) => {
+  const { noteId } = req.params;
+  const note = await Note.findById(noteId);
+  if (!note) return next(createError(404, 'Note not found'));
+  res.status(200).json(note);
+};
+
+export const createNote = async (req, res) => {
+  const note = await Note.create(req.body);
+  res.status(201).json(note);
 };
 
 export const updateNote = async (req, res, next) => {
-  const { id } = req.params;
-  const result = await Note.findByIdAndUpdate(id, req.body, {
-    returnDocument: 'after', // Новий стандарт Mongoose 9
+  const { noteId } = req.params;
+  const result = await Note.findByIdAndUpdate(noteId, req.body, {
+    returnDocument: 'after',
   });
-
   if (!result) return next(createError(404, 'Note not found'));
+  res.status(200).json(result);
+};
 
-  res.status(200).json({ status: 200, message: 'Updated', data: result });
+export const deleteNote = async (req, res, next) => {
+  const { noteId } = req.params;
+  const result = await Note.findByIdAndDelete(noteId);
+  if (!result) return next(createError(404, 'Note not found'));
+  res.status(204).send();
 };
