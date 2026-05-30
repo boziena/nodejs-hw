@@ -1,5 +1,7 @@
-import morgan from 'morgan';
+import pino from 'pino-http';
 
-const logger = morgan('tiny');
-
-export default logger;
+export const logger = pino({
+  transport: {
+    target: 'pino-pretty',
+  },
+});
