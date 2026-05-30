@@ -3,10 +3,7 @@ import * as notesController from '../controllers/notesController.js';
 
 const router = Router();
 
-router.get('/notes', notesController.getAllNotes);
-router.get('/notes/:noteId', notesController.getNoteById);
-router.post('/notes', notesController.createNote);
-router.patch('/notes/:noteId', notesController.updateNote);
-router.delete('/notes/:noteId', notesController.deleteNote);
+router.get('/', notesController.getAllNotes); // Рядок 6 зазвичай тут
+router.patch('/:id', notesController.updateNote);
 
 export default router;
