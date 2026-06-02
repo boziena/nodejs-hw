@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { celebrate } from 'celebrate';
 import * as ctrl from '../controllers/notesController.js';
 import {
   getAllNotesSchema,
@@ -9,10 +10,10 @@ import {
 
 const router = Router();
 
-router.get('/', getAllNotesSchema, ctrl.getAllNotes);
-router.post('/', createNoteSchema, ctrl.createNote);
-router.get('/:noteId', noteIdSchema, ctrl.getNoteById);
-router.patch('/:noteId', updateNoteSchema, ctrl.updateNote);
-router.delete('/:noteId', noteIdSchema, ctrl.deleteNote);
+router.get('/', celebrate(getAllNotesSchema), ctrl.getAllNotes);
+router.post('/', celebrate(createNoteSchema), ctrl.createNote);
+router.get('/:noteId', celebrate(noteIdSchema), ctrl.getNoteById);
+router.patch('/:noteId', celebrate(updateNoteSchema), ctrl.updateNote);
+router.delete('/:noteId', celebrate(noteIdSchema), ctrl.deleteNote);
 
 export default router;
