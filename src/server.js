@@ -18,14 +18,15 @@ export const setupServer = async () => {
   app.use(cors());
   app.use(logger);
 
-  app.use('/notes', notesRouter);
+  // Реєстрація без префікса, як того вимагав ментор
+  app.use('/', notesRouter);
 
   app.use(notFoundHandler);
-  app.use(errors()); // Обробка помилок валідації celebrate
+  app.use(errors());
   app.use(errorHandler);
 
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-};
+};;
 
 setupServer();
