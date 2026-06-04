@@ -2,7 +2,6 @@ import { Joi } from 'celebrate';
 import { isValidObjectId } from 'mongoose';
 import { TAGS } from '../constants/tags.js';
 
-// Кастомний валідатор
 const objectIdValidator = (value, helpers) => {
   if (!isValidObjectId(value)) {
     return helpers.message('Invalid id');
@@ -10,7 +9,6 @@ const objectIdValidator = (value, helpers) => {
   return value;
 };
 
-// ОБОВ'ЯЗКОВО мають бути export
 export const getAllNotesSchema = {
   query: Joi.object({
     page: Joi.number().integer().min(1).default(1),

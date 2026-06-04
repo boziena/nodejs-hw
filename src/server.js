@@ -6,7 +6,6 @@ import notesRouter from './routes/notesRoutes.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { notFoundHandler } from './middleware/notFoundHandler.js';
 import { logger } from './middleware/logger.js';
-// ВАЖЛИВО: Назва функції має бути `initMongoConnection`
 import { initMongoConnection } from './db/connectMongoDB.js';
 
 const app = express();
@@ -23,7 +22,7 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
 
-// Обов'язково викликаємо функцію бази, і тільки потім .listen()
+// Запуск: спочатку база, потім сервер
 initMongoConnection()
   .then(() => {
     app.listen(PORT, () => {
@@ -31,6 +30,6 @@ initMongoConnection()
     });
   })
   .catch((err) => {
-    console.error('Database connection failed:', err);
+    console.error('Failed to start server:', err);
     process.exit(1);
   });
