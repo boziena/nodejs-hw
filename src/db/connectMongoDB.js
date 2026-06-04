@@ -1,15 +1,15 @@
 import mongoose from 'mongoose';
 
-export const initMongoConnection = async () => {
+export const connectMongoDB = async () => {
   try {
     const url = process.env.MONGO_URL;
     if (!url) {
-      throw new Error('MONGO_URL is not defined in environment variables');
+      throw new Error('MONGO_URL is not defined');
     }
     await mongoose.connect(url);
     console.log('Mongo connection successfully established!');
   } catch (e) {
-    console.error('Error while setting up mongo connection:', e);
+    console.error('Database connection failed:', e);
     throw e;
   }
 };
