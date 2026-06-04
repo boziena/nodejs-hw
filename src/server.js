@@ -6,7 +6,7 @@ import notesRouter from './routes/notesRoutes.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { notFoundHandler } from './middleware/notFoundHandler.js';
 import { logger } from './middleware/logger.js';
-// ЦЕЙ ІМПОРТ МАЄ БУТИ connectMongoDB, БО САМЕ ЦЕ У ВАС ЕКСПОРТУЄТЬСЯ
+// Тепер назва збігається!
 import { connectMongoDB } from './db/connectMongoDB.js';
 
 const app = express();
@@ -23,7 +23,7 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
 
-// ВИКЛИКАЄМО САМЕ connectMongoDB
+// Викликаємо connectMongoDB
 connectMongoDB()
   .then(() => {
     app.listen(PORT, () => {
@@ -31,6 +31,6 @@ connectMongoDB()
     });
   })
   .catch((err) => {
-    console.error('Database connection failed', err);
+    console.error('Database connection failed:', err);
     process.exit(1);
   });
