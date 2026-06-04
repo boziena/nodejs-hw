@@ -1,7 +1,6 @@
 import { Joi } from 'celebrate';
 import { TAGS } from '../constants/tags.js';
 
-// Важливо: експортуємо ТІЛЬКИ Joi.object({...})
 export const getAllNotesSchema = Joi.object({
   page: Joi.number().integer().min(1).default(1),
   perPage: Joi.number().integer().min(5).max(20).default(10),
@@ -10,7 +9,7 @@ export const getAllNotesSchema = Joi.object({
 });
 
 export const noteIdSchema = Joi.object({
-  noteId: Joi.string().hex().length(24).required(), // Або ваш кастомний валідатор ObjectId
+  noteId: Joi.string().hex().length(24).required(),
 });
 
 export const createNoteSchema = Joi.object({
