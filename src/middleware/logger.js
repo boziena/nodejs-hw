@@ -1,7 +1,4 @@
-import pino from 'pino-http';
-
-export const logger = pino({
-  transport: {
-    target: 'pino-pretty',
-  },
-});
+export const logger = (req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+};

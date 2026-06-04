@@ -1,8 +1,8 @@
 import { Joi } from 'celebrate';
-import { isValidObjectId } from 'mongoose'; // Імпорт валідатора
+import { isValidObjectId } from 'mongoose';
 import { TAGS } from '../constants/tags.js';
 
-// Кастомна функція валідації для Joi
+// Кастомний валідатор
 const objectIdValidator = (value, helpers) => {
   if (!isValidObjectId(value)) {
     return helpers.message('Invalid id');
@@ -21,8 +21,7 @@ export const getAllNotesSchema = {
 
 export const noteIdSchema = {
   params: Joi.object({
-    // Застосування кастомного валідатора
-    noteId: Joi.string().custom(objectIdValidator).required(),
+    noteId: Joi.string().custom(objectIdValidator).required(), // Використання валідатора
   }),
 };
 

@@ -5,8 +5,8 @@ import { errors } from 'celebrate';
 import notesRouter from './routes/notesRoutes.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { notFoundHandler } from './middleware/notFoundHandler.js';
-import { logger } from './middleware/logger.js'; // Імпорт логера
-import { initMongoConnection } from './db/initMongoConnection.js'; // Імпорт функції підключення
+import { logger } from './middleware/logger.js';
+import { initMongoConnection } from './db/connectMongoDB.js'; // Виправлений шлях
 
 dotenv.config();
 
@@ -15,17 +15,17 @@ export const setupServer = () => {
 
   app.use(express.json());
   app.use(cors());
-  app.use(logger); // Застосування логера
+  app.use(logger); // Логер підключено
 
   app.use('/', notesRouter);
 
   app.use(notFoundHandler);
-  app.use(errors());
+  app.use(errors()); // Обробка помилок Celebrate
   app.use(errorHandler);
 
   const PORT = process.env.PORT || 3000;
 
-  // Виклик функції підключення ДО запуску сервера
+  // Спочатку БД, потім сервер
   initMongoConnection().then(() => {
     app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
   });
