@@ -6,7 +6,8 @@ import notesRouter from './routes/notesRoutes.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { notFoundHandler } from './middleware/notFoundHandler.js';
 import { logger } from './middleware/logger.js';
-import { initMongoConnection } from './db/connectMongoDB.js'; // Виправлений шлях
+// Використовуємо саме connectMongoDB, бо так у вас у файлі
+import { connectMongoDB } from './db/connectMongoDB.js';
 
 dotenv.config();
 
@@ -15,18 +16,22 @@ export const setupServer = () => {
 
   app.use(express.json());
   app.use(cors());
-  app.use(logger); // Логер підключено
+  app.use(logger);
 
   app.use('/', notesRouter);
 
   app.use(notFoundHandler);
-  app.use(errors()); // Обробка помилок Celebrate
+  app.use(errors());
   app.use(errorHandler);
 
   const PORT = process.env.PORT || 3000;
 
-  // Спочатку БД, потім сервер
-  initMongoConnection().then(() => {
-    app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
-  });
+  // Викликаємо connectMongoDB()
+  connectMongoDB()
+    .then(() => {
+      app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+    })
+    .catch((err) => {
+      console.error('Помилка підключення до БД:', err);
+    });
 };

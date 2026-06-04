@@ -2,7 +2,6 @@ import { Joi } from 'celebrate';
 import { isValidObjectId } from 'mongoose';
 import { TAGS } from '../constants/tags.js';
 
-// Кастомний валідатор
 const objectIdValidator = (value, helpers) => {
   if (!isValidObjectId(value)) {
     return helpers.message('Invalid id');
@@ -21,7 +20,7 @@ export const getAllNotesSchema = {
 
 export const noteIdSchema = {
   params: Joi.object({
-    noteId: Joi.string().custom(objectIdValidator).required(), // Використання валідатора
+    noteId: Joi.string().custom(objectIdValidator).required(),
   }),
 };
 
