@@ -1,5 +1,14 @@
 import { Joi } from 'celebrate';
+import { isValidObjectId } from 'mongoose'; // Імпорт валідатора
 import { TAGS } from '../constants/tags.js';
+
+// Кастомна функція валідації для Joi
+const objectIdValidator = (value, helpers) => {
+  if (!isValidObjectId(value)) {
+    return helpers.message('Invalid id');
+  }
+  return value;
+};
 
 export const getAllNotesSchema = {
   query: Joi.object({
@@ -12,7 +21,8 @@ export const getAllNotesSchema = {
 
 export const noteIdSchema = {
   params: Joi.object({
-    noteId: Joi.string().hex().length(24).required(),
+    // Застосування кастомного валідатора
+    noteId: Joi.string().custom(objectIdValidator).required(),
   }),
 };
 
@@ -26,7 +36,7 @@ export const createNoteSchema = {
 
 export const updateNoteSchema = {
   params: Joi.object({
-    noteId: Joi.string().hex().length(24).required(),
+    noteId: Joi.string().custom(objectIdValidator).required(),
   }),
   body: Joi.object({
     title: Joi.string().min(1),
