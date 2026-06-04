@@ -2,6 +2,7 @@ import { Joi } from 'celebrate';
 import { isValidObjectId } from 'mongoose';
 import { TAGS } from '../constants/tags.js';
 
+// Кастомна функція валідації для перевірки, чи є ID коректним ObjectID MongoDB
 const objectIdValidator = (value, helpers) => {
   if (!isValidObjectId(value)) {
     return helpers.message('Invalid id');
@@ -9,6 +10,7 @@ const objectIdValidator = (value, helpers) => {
   return value;
 };
 
+// Схема для отримання всіх нотаток (query parameters)
 export const getAllNotesSchema = {
   query: Joi.object({
     page: Joi.number().integer().min(1).default(1),
@@ -18,12 +20,14 @@ export const getAllNotesSchema = {
   }),
 };
 
+// Схема для перевірки ID в params (використовує наш кастомний валідатор)
 export const noteIdSchema = {
   params: Joi.object({
     noteId: Joi.string().custom(objectIdValidator).required(),
   }),
 };
 
+// Схема для створення нотатки (body)
 export const createNoteSchema = {
   body: Joi.object({
     title: Joi.string().min(1).required(),
@@ -32,6 +36,7 @@ export const createNoteSchema = {
   }),
 };
 
+// Схема для оновлення нотатки (params + body)
 export const updateNoteSchema = {
   params: Joi.object({
     noteId: Joi.string().custom(objectIdValidator).required(),
@@ -40,5 +45,5 @@ export const updateNoteSchema = {
     title: Joi.string().min(1),
     content: Joi.string().allow(''),
     tag: Joi.string().valid(...TAGS),
-  }).min(1),
+  }).min(1), // Принаймні одне поле має бути присутнім для оновлення
 };
