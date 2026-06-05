@@ -17,8 +17,9 @@ app.use(cors({ credentials: true, origin: true }));
 app.use(cookieParser());
 app.use(logger);
 
-app.use('/auth', authRouter);
-app.use('/notes', notesRouter);
+// РОУТЕРИ БЕЗ ПРЕФІКСІВ
+app.use(authRouter);
+app.use(notesRouter);
 
 app.use(notFoundHandler);
 app.use(errors());
@@ -28,7 +29,9 @@ const PORT = process.env.PORT || 3000;
 
 connectMongoDB()
   .then(() => {
-    app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+    app.listen(PORT, () => {
+      console.log(`Server started on port ${PORT}`);
+    });
   })
   .catch((err) => {
     console.error(err);
