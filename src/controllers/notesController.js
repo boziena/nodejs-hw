@@ -7,19 +7,20 @@ export const getAllNotes = async (req, res, next) => {
     const limit = parseInt(perPage);
     const skip = (parseInt(page) - 1) * limit;
 
-    const query = Note.find().where('userId').equals(req.user._id);
-
-    if (tag) query.where('tag').equals(tag);
+    // Сформуємо об'єкт фільтра для Mongoose
+    const filter = { userId: req.user._id };
+    if (tag) filter.tag = tag;
     if (search) {
-      query.or([
+      filter.$or = [
         { title: { $regex: search, $options: 'i' } },
         { content: { $regex: search, $options: 'i' } },
-      ]);
+      ];
     }
 
+    // Тепер передаємо саме об'єкт filter у countDocuments
     const [notes, totalNotes] = await Promise.all([
-      query.clone().skip(skip).limit(limit).exec(),
-      Note.countDocuments(query),
+      Note.find(filter).skip(skip).limit(limit).exec(),
+      Note.countDocuments(filter),
     ]);
 
     res.status(200).json({
