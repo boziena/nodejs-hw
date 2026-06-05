@@ -5,7 +5,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 // celebrate(validator)
 import { errors } from 'celebrate';
-import { connectMongoDB } from './db/connectMongoDB.';
+import { connectMongoDB } from './db/connectMongoDB.js';
 import { logger } from './middleware/logger.js';
 // Errors
 import { notFoundHandler } from './middleware/notFoundHandler.js';
