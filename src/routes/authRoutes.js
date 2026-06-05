@@ -4,26 +4,22 @@ import {
   registerUserSchema,
   loginUserSchema,
 } from '../validations/authValidation.js';
-import {
-  registerUser,
-  loginUser,
-  logoutUser,
-  refreshUserSession,
-} from '../controllers/authController.js';
-import { ctrlWrapper } from '../utils/ctrlWrapper.js'; // переконайтеся, що цей файл існує
+import * as ctrl from '../controllers/authController.js';
+import { ctrlWrapper } from '../middleware/errorHandler.js';
 
 const router = Router();
+
 router.post(
   '/register',
   celebrate({ body: registerUserSchema }),
-  ctrlWrapper(registerUser),
+  ctrlWrapper(ctrl.registerUser),
 );
 router.post(
   '/login',
   celebrate({ body: loginUserSchema }),
-  ctrlWrapper(loginUser),
+  ctrlWrapper(ctrl.loginUser),
 );
-router.post('/logout', ctrlWrapper(logoutUser));
-router.post('/refresh', ctrlWrapper(refreshUserSession));
+router.post('/logout', ctrlWrapper(ctrl.logoutUser));
+router.post('/refresh', ctrlWrapper(ctrl.refreshUserSession));
 
 export default router;

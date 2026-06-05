@@ -8,11 +8,9 @@ import {
   updateNoteSchema,
 } from '../validations/notesValidation.js';
 import { authenticate } from '../middleware/authenticate.js';
-import { ctrlWrapper } from '../utils/ctrlWrapper.js';
+import { ctrlWrapper } from '../middleware/errorHandler.js';
 
 const router = Router();
-
-// Застосовуємо authenticate до всіх маршрутів нотаток
 router.use(authenticate);
 
 router.get('/', celebrate(getAllNotesSchema), ctrlWrapper(ctrl.getAllNotes));
