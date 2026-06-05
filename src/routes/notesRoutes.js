@@ -7,13 +7,26 @@ import {
   createNoteSchema,
   updateNoteSchema,
 } from '../validations/notesValidation.js';
+import { authenticate } from '../middleware/authenticate.js';
+import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 
 const router = Router();
 
-router.get('/', celebrate(getAllNotesSchema), ctrl.getAllNotes);
-router.post('/', celebrate(createNoteSchema), ctrl.createNote);
-router.get('/:noteId', celebrate(noteIdSchema), ctrl.getNoteById);
-router.patch('/:noteId', celebrate(updateNoteSchema), ctrl.updateNote);
-router.delete('/:noteId', celebrate(noteIdSchema), ctrl.deleteNote);
+// Застосовуємо authenticate до всіх маршрутів нотаток
+router.use(authenticate);
+
+router.get('/', celebrate(getAllNotesSchema), ctrlWrapper(ctrl.getAllNotes));
+router.post('/', celebrate(createNoteSchema), ctrlWrapper(ctrl.createNote));
+router.get('/:noteId', celebrate(noteIdSchema), ctrlWrapper(ctrl.getNoteById));
+router.patch(
+  '/:noteId',
+  celebrate(updateNoteSchema),
+  ctrlWrapper(ctrl.updateNote),
+);
+router.delete(
+  '/:noteId',
+  celebrate(noteIdSchema),
+  ctrlWrapper(ctrl.deleteNote),
+);
 
 export default router;
