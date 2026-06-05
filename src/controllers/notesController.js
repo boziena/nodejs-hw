@@ -7,7 +7,7 @@ export const getAllNotes = async (req, res, next) => {
     const limit = parseInt(perPage);
     const skip = (parseInt(page) - 1) * limit;
 
-    // Сформуємо об'єкт фільтра для Mongoose
+    // 1. Формуємо ЧИСТИЙ об'єкт фільтра
     const filter = { userId: req.user._id };
     if (tag) filter.tag = tag;
     if (search) {
@@ -17,10 +17,10 @@ export const getAllNotes = async (req, res, next) => {
       ];
     }
 
-    // Тепер передаємо саме об'єкт filter у countDocuments
+    // 2. Використовуємо цей же об'єкт для обох операцій
     const [notes, totalNotes] = await Promise.all([
       Note.find(filter).skip(skip).limit(limit).exec(),
-      Note.countDocuments(filter),
+      Note.countDocuments(filter), // Тепер тут передається об'єкт, а не query
     ]);
 
     res.status(200).json({
@@ -35,51 +35,3 @@ export const getAllNotes = async (req, res, next) => {
   }
 };
 
-export const getNoteById = async (req, res, next) => {
-  try {
-    const note = await Note.findOne({
-      _id: req.params.noteId,
-      userId: req.user._id,
-    });
-    if (!note) throw createHttpError(404, 'Note not found');
-    res.status(200).json(note);
-  } catch (err) {
-    next(err);
-  }
-};
-
-export const createNote = async (req, res, next) => {
-  try {
-    const note = await Note.create({ ...req.body, userId: req.user._id });
-    res.status(201).json(note);
-  } catch (err) {
-    next(err);
-  }
-};
-
-export const updateNote = async (req, res, next) => {
-  try {
-    const note = await Note.findOneAndUpdate(
-      { _id: req.params.noteId, userId: req.user._id },
-      req.body,
-      { returnDocument: 'after' },
-    );
-    if (!note) throw createHttpError(404, 'Note not found');
-    res.status(200).json(note);
-  } catch (err) {
-    next(err);
-  }
-};
-
-export const deleteNote = async (req, res, next) => {
-  try {
-    const note = await Note.findOneAndDelete({
-      _id: req.params.noteId,
-      userId: req.user._id,
-    });
-    if (!note) throw createHttpError(404, 'Note not found');
-    res.status(200).json(note);
-  } catch (err) {
-    next(err);
-  }
-};
